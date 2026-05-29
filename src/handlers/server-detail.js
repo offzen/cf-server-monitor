@@ -576,6 +576,14 @@ export async function handleServerDetail(request, env, sys, viewId) {
           <span class="sysinfo-value" id="val-disk-total">${(parseFloat(server.disk_total)/1024).toFixed(1)} GiB</span>
         </div>
         <div class="sysinfo-item">
+          <span class="sysinfo-label">🔽 Traffic In</span>
+          <span class="sysinfo-value" id="val-traffic-in">${formatBytes(server.net_rx)}</span>
+        </div>
+        <div class="sysinfo-item">
+          <span class="sysinfo-label">🔼 Traffic Out</span>
+          <span class="sysinfo-value" id="val-traffic-out">${formatBytes(server.net_tx)}</span>
+        </div>
+        <div class="sysinfo-item">
           <span class="sysinfo-label">⏰ Last Report</span>
           <span class="sysinfo-value" id="val-last-report">${new Date(serverLastUpdated).toLocaleString(undefined, { hour12: false })}</span>
         </div>
@@ -1302,6 +1310,8 @@ export async function handleServerDetail(request, env, sys, viewId) {
         document.getElementById('text-tcp').innerText = data.tcp_conn || '0';
         document.getElementById('text-udp').innerText = data.udp_conn || '0';
         
+        document.getElementById('val-traffic-in').innerText = formatBytes(data.net_rx);
+        document.getElementById('val-traffic-out').innerText = formatBytes(data.net_tx);
         document.getElementById('val-last-report').innerText = new Date(lastUpdatedTime).toLocaleString(undefined, { hour12: false });
         
         document.getElementById('text-disk-detail').innerText = 
