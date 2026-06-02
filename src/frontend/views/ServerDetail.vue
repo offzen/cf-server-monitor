@@ -748,10 +748,17 @@ const appendDataToChart = (chart, datasetIndex, timestamp, value) => {
   if (!dataset) return
   
   const time = new Date(timestamp).getTime()
-  const cutoffTime = Date.now() - currentHours.value * 60 * 60 * 1000
+  const endTime = Date.now()
+  const startTime = endTime - currentHours.value * 60 * 60 * 1000
 
   dataset.data.push({ x: time, y: parseFloat(value) || 0 })
-  dataset.data = dataset.data.filter(d => d.x >= cutoffTime)
+  dataset.data = dataset.data.filter(d => d.x >= startTime)
+  
+  if (chart.options && chart.options.scales && chart.options.scales.x) {
+    chart.options.scales.x.min = startTime
+    chart.options.scales.x.max = endTime
+  }
+  
   chart.update('none')
 }
 
@@ -781,15 +788,21 @@ const fetchCurrentStatus = async () => {
     if (charts.load) {
       const loads = parseLoadAvg(data.load_avg)
       const time = new Date(dataTimestamp).getTime()
-      const cutoffTime = Date.now() - currentHours.value * 60 * 60 * 1000
+      const endTime = Date.now()
+      const startTime = endTime - currentHours.value * 60 * 60 * 1000
       
       charts.load.data.datasets[0].data.push({ x: time, y: loads[0] })
       charts.load.data.datasets[1].data.push({ x: time, y: loads[1] })
       charts.load.data.datasets[2].data.push({ x: time, y: loads[2] })
       
-      charts.load.data.datasets[0].data = charts.load.data.datasets[0].data.filter(d => d.x >= cutoffTime)
-      charts.load.data.datasets[1].data = charts.load.data.datasets[1].data.filter(d => d.x >= cutoffTime)
-      charts.load.data.datasets[2].data = charts.load.data.datasets[2].data.filter(d => d.x >= cutoffTime)
+      charts.load.data.datasets[0].data = charts.load.data.datasets[0].data.filter(d => d.x >= startTime)
+      charts.load.data.datasets[1].data = charts.load.data.datasets[1].data.filter(d => d.x >= startTime)
+      charts.load.data.datasets[2].data = charts.load.data.datasets[2].data.filter(d => d.x >= startTime)
+      
+      if (charts.load.options && charts.load.options.scales && charts.load.options.scales.x) {
+        charts.load.options.scales.x.min = startTime
+        charts.load.options.scales.x.max = endTime
+      }
       
       charts.load.update('none')
     }
