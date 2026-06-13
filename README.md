@@ -592,7 +592,7 @@ node test/api-check.js --help
 
 MIT License
 
-## 🙏 致谢
+## 🙏 致谢 reconnect
 
 - [CF-Server-Monitor-Pro](https://github.com/a63414262/CF-Server-Monitor-Pro) 最初借鉴该项目，进行深度二次开发
 - [Cloudflare Workers](https://workers.cloudflare.com/)
